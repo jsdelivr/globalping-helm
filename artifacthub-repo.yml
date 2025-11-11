@@ -5,9 +5,10 @@ repositoryID: 9ad9609c-3c51-4467-aee3-e44b61bfbc83
 owners:
   - name: Globalping
     email: d@globalping.io
+  - name: jimaek
 
 # Repository display name
-displayName: Globalping Probe Helm Charts
+displayName: Globalping Probe
 
 # Description of this repository
 description: |
