@@ -33,6 +33,66 @@ jobs:
         with:
           version: v3.14.0
 
+      - name: Auto-increment chart version
+        id: version
+        run: |
+          for chart in charts/*/; do
+            chart_name=$(basename "$chart")
+            chart_yaml="$chart/Chart.yaml"
+            artifacthub_pkg="$chart/artifacthub-pkg.yml"
+
+            if [ ! -f "$chart_yaml" ]; then
+              echo "Chart.yaml not found in $chart"
+              continue
+            fi
+
+            echo "Processing $chart_name"
+
+            # Read current version
+            current_version=$(grep '^version:' "$chart_yaml" | awk '{print $2}' | tr -d '"' | tr -d "'")
+            echo "Current version: $current_version"
+
+            # Split version into components (x.y.z)
+            IFS='.' read -r major minor patch <<< "$current_version"
+
+            # Increment patch version
+            new_patch=$((patch + 1))
+            new_version="${major}.${minor}.${new_patch}"
+
+            echo "New version: $new_version"
+
+            # Update Chart.yaml version
+            sed -i "s/^version: .*/version: $new_version/" "$chart_yaml"
+
+            # Also update appVersion to match
+            sed -i "s/^appVersion: .*/appVersion: \"$new_version\"/" "$chart_yaml"
+
+            echo "Updated $chart_yaml to version $new_version"
+
+            # Update artifacthub-pkg.yml if it exists
+            if [ -f "$artifacthub_pkg" ]; then
+              echo "Updating $artifacthub_pkg"
+
+              # Update version field
+              sed -i "s/^version: .*/version: $new_version/" "$artifacthub_pkg"
+
+              # Update container image version in containersImages section
+              sed -i "s|image: globalping/globalping-probe:.*|image: globalping/globalping-probe:$new_version|" "$artifacthub_pkg"
+
+              echo "Updated $artifacthub_pkg to version $new_version"
+            fi
+          done
+
+      - name: Commit version bump
+        run: |
+          git add charts/*/Chart.yaml charts/*/artifacthub-pkg.yml
+          if git diff --staged --quiet; then
+            echo "No version changes to commit"
+          else
+            git commit -m "chore: bump chart version [skip ci]"
+            git push origin ${{ github.ref_name }}
+          fi
+
       - name: Verify chart structure and lint
         run: |
           for chart in charts/*/; do
