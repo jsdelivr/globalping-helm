@@ -7,22 +7,22 @@ This is the Helm chart repository for Globalping Probe.
 Add this repository to Helm:
 
 ```bash
-helm repo add globalping-probe https://jsdelivr.github.io/globalping-helm
+helm repo add globalping https://jsdelivr.github.io/globalping-helm
 helm repo update
 ```
 
 ## Install Chart
 
 ```bash
-helm install my-probe globalping-probe/globalping-probe \
+helm install globalping-probe globalping/globalping \
   --set globalpingToken=YOUR_TOKEN_HERE \
-  --namespace globalping-probe \
+  --namespace globalping \
   --create-namespace
 ```
 
 ## Available Charts
 
-- **globalping-probe**: Deploy Globalping Probe on Kubernetes
+- **globalping**: Deploy Globalping Probe on Kubernetes
 
 ## Documentation
 
