@@ -1,7 +1,6 @@
 # Globalping Probe Helm Chart
 
-[![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/globalping-probe)](https://artifacthub.io/packages/helm/globalping-probe/globalping-probe)
-[![License](https://img.shields.io/badge/License-MPL--2.0-blue.svg)](https://opensource.org/licenses/MPL-2.0)
+[![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/globalping)](https://artifacthub.io/packages/search?repo=globalping)
 
 Run your own [Globalping Probe](https://github.com/jsdelivr/globalping-probe) on Kubernetes.
 
