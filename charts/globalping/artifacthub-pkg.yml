@@ -2,7 +2,7 @@
 # https://artifacthub.io/docs/topics/annotations/helm/
 
 # Version string (will be synced from Chart.yaml)
-version: 1.0.0
+version: 1.0.1
 
 # Display name for the package
 displayName: Globalping Probe
@@ -80,7 +80,7 @@ license: MPL-2.0
 containsSecurityUpdates: false
 containersImages:
   - name: globalping-probe
-    image: globalping/globalping-probe:1.0.0
+    image: globalping/globalping-probe:1.0.1
     whitelisted: false
 
 # Operator information
