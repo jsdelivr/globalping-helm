@@ -1,0 +1,109 @@
+# Default values for the Globalping probe chart.
+# Keep the configuration surface small and production ready.
+
+globalpingToken: ""
+
+nameOverride: ""
+fullnameOverride: ""
+
+image:
+  repository: globalping/globalping-probe
+  tag: ""
+  pullPolicy: Always
+
+imagePullSecrets: []
+
+deploymentType: daemonset
+replicaCount: 1
+
+serviceAccount:
+  create: true
+  name: ""
+  automount: true
+  annotations: {}
+
+podAnnotations: {}
+podLabels: {}
+
+podSecurityContext:
+  fsGroup: 1000
+
+securityContext:
+  runAsNonRoot: false
+  runAsUser: 0
+  readOnlyRootFilesystem: false
+  capabilities:
+    add:
+      - NET_RAW
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+network:
+  hostNetwork: true
+  dnsPolicy: ClusterFirstWithHostNet
+
+env:
+  debug: false
+  logFormat: text
+  extra: []
+
+persistence:
+  enabled: false
+  storageClassName: ""
+  accessMode: ReadWriteOnce
+  size: 1Gi
+  annotations: {}
+
+networkPolicy:
+  enabled: false
+  egress:
+    # Allow HTTPS for Globalping API (api.globalping.io)
+    - to:
+        - namespaceSelector: {}
+      ports:
+        - protocol: TCP
+          port: 443
+    # Allow DNS resolution
+    - to:
+        - namespaceSelector: {}
+      ports:
+        - protocol: UDP
+          port: 53
+    # Allow ICMP for ping/traceroute measurements
+    - to:
+        - namespaceSelector: {}
+      ports:
+        - protocol: ICMP
+
+livenessProbe:
+  enabled: true
+  initialDelaySeconds: 60
+  periodSeconds: 30
+  timeoutSeconds: 10
+  successThreshold: 1
+  failureThreshold: 3
+
+readinessProbe:
+  enabled: true
+  initialDelaySeconds: 30
+  periodSeconds: 10
+  timeoutSeconds: 5
+  successThreshold: 1
+  failureThreshold: 3
+
+updateStrategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxUnavailable: 1
+    maxSurge: 1
+

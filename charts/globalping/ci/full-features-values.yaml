@@ -1,0 +1,51 @@
+# CI test values with all features enabled
+globalpingToken: "test-token-ci-full"
+deploymentType: daemonset
+
+resources:
+  limits:
+    cpu: 300m
+    memory: 384Mi
+  requests:
+    cpu: 75m
+    memory: 192Mi
+
+network:
+  hostNetwork: true
+  dnsPolicy: ClusterFirstWithHostNet
+
+# Enable persistence
+persistence:
+  enabled: true
+  storageClassName: ""
+  size: 100Mi
+
+# Enable network policy
+networkPolicy:
+  enabled: true
+
+env:
+  debug: true
+  logFormat: "json"
+  extra:
+    - name: NODE_ENV
+      value: "test"
+
+# Custom pod annotations
+podAnnotations:
+  test-annotation: "test-value"
+
+# Custom labels
+podLabels:
+  test-label: "test-value"
+
+livenessProbe:
+  enabled: true
+  initialDelaySeconds: 30
+  periodSeconds: 10
+
+readinessProbe:
+  enabled: true
+  initialDelaySeconds: 15
+  periodSeconds: 5
+

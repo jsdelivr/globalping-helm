@@ -1,0 +1,30 @@
+# Artifact Hub repository metadata file
+# https://artifacthub.io/docs/topics/repositories/
+
+repositoryID: 93b20ef7-e7c2-4878-87aa-ee246e01565e
+owners:
+  - name: Globalping
+    email: d@globalping.io
+  - name: jimaek
+
+# Repository display name
+displayName: Globalping Probe
+
+# Description of this repository
+description: |
+  Official Helm charts for deploying Globalping Probe on Kubernetes.
+  
+  Globalping is a platform that allows you to run network measurements
+  (ping, traceroute, DNS lookups, HTTP requests, MTR) from probes
+  distributed around the world. Use these charts to contribute your
+  own probe to the global network.
+
+# URL of the repository
+url: https://github.com/jsdelivr/globalping-helm
+
+# Branch where the Helm charts are published (GitHub Pages)
+branch: gh-pages
+
+# Set to true to disable automatic repository scanning
+disabled: false
+

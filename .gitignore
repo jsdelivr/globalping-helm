@@ -1,0 +1,74 @@
+# Helm
+*.tgz
+.cr-release-packages/
+.cr-index/
+
+# Kubernetes
+*.kubeconfig
+kubeconfig
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+*.log
+
+# Temporary files
+tmp/
+temp/
+.tmp/
+
+# Secrets (never commit!)
+*secret*.yaml
+*token*.txt
+.env
+.env.local
+
+# Test outputs
+test-output/
+coverage/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+venv/
+ENV/
+env/
+
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# OS
+Thumbs.db
+.Spotlight-V100
+.Trashes
+
+# Build artifacts
+dist/
+build/
+*.tar.gz
+*.zip
+
+IMPLEMENTATION_SUMMARY.md
+.plan
+.plan.*
+plan.md
+cursor/
+.cursor/
+*.plan
+implementation-*.md
+ai-*.md
+agent-*.md
+_plan.md
+.doc-cleanup-notes.md
+SETUP.md
+TESTING.md*.html

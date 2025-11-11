@@ -1,0 +1,63 @@
+apiVersion: v2
+name: globalping
+description: Helm chart for deploying the Globalping probe on Kubernetes
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+keywords:
+  - globalping
+  - probe
+  - network-monitoring
+  - measurements
+  - ping
+  - traceroute
+  - dns
+  - http
+  - mtr
+  - cdn
+  - jsdelivr
+home: https://globalping.io
+sources:
+  - https://github.com/jsdelivr/globalping-probe
+  - https://github.com/jsdelivr/globalping-helm
+maintainers:
+  - name: Globalping Team
+    email: team@globalping.io
+    url: https://github.com/jsdelivr
+icon: https://raw.githubusercontent.com/jsdelivr/globalping/master/logo.svg
+annotations:
+  artifacthub.io/category: monitoring-logging
+  artifacthub.io/license: MPL-2.0
+  artifacthub.io/prerelease: "false"
+  artifacthub.io/containsSecurityUpdates: "false"
+  artifacthub.io/changes: |
+    - kind: changed
+      description: Simplified workloads while keeping deployment, persistence, and network policy options
+    - kind: changed
+      description: Shared pod spec logic between DaemonSet and Deployment manifests
+    - kind: fixed
+      description: Fixed helm lint issues with .helmignore negation pattern and template includes
+    - kind: fixed
+      description: Fixed NOTES.txt type comparison for replicaCount
+    - kind: added
+      description: Added comprehensive CI/CD workflows for testing and releasing
+    - kind: added
+      description: Added ICMP egress rule to NetworkPolicy for ping/traceroute support
+  artifacthub.io/links: |
+    - name: Documentation
+      url: https://github.com/jsdelivr/globalping-probe/wiki
+    - name: Source Code
+      url: https://github.com/jsdelivr/globalping-probe
+    - name: Helm Repository
+      url: https://github.com/jsdelivr/globalping-helm
+    - name: Globalping Platform
+      url: https://globalping.io
+    - name: Community Discord
+      url: https://discord.gg/globalping
+  artifacthub.io/recommendations: |
+    - url: https://artifacthub.io/packages/helm/prometheus-community/kube-prometheus-stack
+  # Operator flags
+  artifacthub.io/operator: "false"
+  # Kubernetes version requirements
+  artifacthub.io/kubeVersion: ">=1.19.0-0"
+

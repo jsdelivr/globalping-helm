@@ -1,0 +1,27 @@
+{{- if eq .Values.deploymentType "deployment" }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "globalping-probe.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "globalping-probe.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "globalping-probe.selectorLabels" . | nindent 6 }}
+  strategy:
+    type: {{ .Values.updateStrategy.type }}
+    {{- if eq .Values.updateStrategy.type "RollingUpdate" }}
+    rollingUpdate:
+      maxUnavailable: {{ .Values.updateStrategy.rollingUpdate.maxUnavailable }}
+      maxSurge: {{ .Values.updateStrategy.rollingUpdate.maxSurge }}
+    {{- end }}
+  template:
+    metadata:
+      {{- include "globalping-probe.podMetadata" (dict "ctx" .) | nindent 6 }}
+    spec:
+      {{- include "globalping-probe.podSpec" . | nindent 6 }}
+{{- end }}
+

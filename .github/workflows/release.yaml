@@ -1,0 +1,153 @@
+name: Release Charts
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      - 'charts/**'
+      - 'artifacthub-repo.yml'
+      - '.github/workflows/release.yaml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Install Helm
+        uses: azure/setup-helm@v4
+        with:
+          version: v3.14.0
+
+      - name: Verify chart structure and lint
+        run: |
+          for chart in charts/*/; do
+            chart_name=$(basename "$chart")
+            echo "Verifying $chart_name"
+
+            # Check required files
+            test -f "$chart/Chart.yaml" || exit 1
+            test -f "$chart/values.yaml" || exit 1
+            test -f "$chart/README.md" || exit 1
+
+            # Lint the chart
+            helm lint "$chart"
+
+            # Lint with all CI values
+            if [ -d "$chart/ci" ]; then
+              for values_file in "$chart/ci"/*.yaml; do
+                if [ -f "$values_file" ]; then
+                  echo "  Linting with $(basename "$values_file")"
+                  helm lint "$chart" --values "$values_file"
+                fi
+              done
+            fi
+          done
+
+      - name: Run chart-releaser
+        uses: helm/chart-releaser-action@v1.7.0
+        env:
+          CR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CR_SKIP_EXISTING: "true"
+        with:
+          charts_dir: charts
+          config: .github/cr.yaml
+
+      - name: Update repository metadata for ArtifactHub
+        run: |
+          # Ensure artifacthub-repo.yml and index.html are in gh-pages branch
+          git fetch origin gh-pages:gh-pages || git checkout -b gh-pages
+          git checkout gh-pages
+
+          NEEDS_COMMIT=false
+
+          # Copy metadata file from master branch (always update to ensure it's current)
+          if git show master:artifacthub-repo.yml > artifacthub-repo.yml.tmp 2>/dev/null; then
+            mv artifacthub-repo.yml.tmp artifacthub-repo.yml
+            if ! git diff --quiet artifacthub-repo.yml 2>/dev/null; then
+              git add artifacthub-repo.yml
+              NEEDS_COMMIT=true
+            fi
+          fi
+
+          # Ensure index.html redirect exists
+          if [ ! -f index.html ]; then
+            cat > index.html << 'EOF'
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <meta http-equiv="refresh" content="0; url=https://github.com/jsdelivr/globalping-helm">
+              <title>Redirecting to Globalping Helm Repository</title>
+              <style>
+                  body {
+                      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+                      display: flex;
+                      justify-content: center;
+                      align-items: center;
+                      height: 100vh;
+                      margin: 0;
+                      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                      color: white;
+                  }
+                  .container {
+                      text-align: center;
+                      padding: 2rem;
+                  }
+                  h1 {
+                      font-size: 2rem;
+                      margin-bottom: 1rem;
+                  }
+                  p {
+                      font-size: 1.1rem;
+                      margin-bottom: 2rem;
+                  }
+                  a {
+                      color: white;
+                      text-decoration: underline;
+                  }
+                  .logo {
+                      font-size: 4rem;
+                      margin-bottom: 1rem;
+                  }
+              </style>
+          </head>
+          <body>
+              <div class="container">
+                  <div class="logo">🌍</div>
+                  <h1>Globalping Helm Repository</h1>
+                  <p>Redirecting to <a href="https://github.com/jsdelivr/globalping-helm">github.com/jsdelivr/globalping-helm</a>...</p>
+                  <p><small>This is a Helm chart repository. If you're not redirected, <a href="https://github.com/jsdelivr/globalping-helm">click here</a>.</small></p>
+              </div>
+              <script>
+                  window.location.href = "https://github.com/jsdelivr/globalping-helm";
+              </script>
+          </body>
+          </html>
+          EOF
+            git add index.html
+            NEEDS_COMMIT=true
+          fi
+
+          # Commit and push if there were changes
+          if [ "$NEEDS_COMMIT" = true ]; then
+            git commit -m "Update repository metadata and redirect page [skip ci]" || true
+            git push origin gh-pages || true
+          fi
+
+          git checkout -

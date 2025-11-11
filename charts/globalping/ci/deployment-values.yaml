@@ -1,0 +1,32 @@
+# CI test values for Deployment mode
+globalpingToken: "test-token-ci-deployment"
+deploymentType: deployment
+replicaCount: 2
+
+# Test with lower resources for CI
+resources:
+  limits:
+    cpu: 200m
+    memory: 256Mi
+  requests:
+    cpu: 50m
+    memory: 128Mi
+
+network:
+  hostNetwork: true
+  dnsPolicy: ClusterFirstWithHostNet
+
+env:
+  debug: false
+  logFormat: "text"
+
+livenessProbe:
+  enabled: true
+  initialDelaySeconds: 30
+  periodSeconds: 10
+
+readinessProbe:
+  enabled: true
+  initialDelaySeconds: 15
+  periodSeconds: 5
+

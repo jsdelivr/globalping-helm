@@ -1,0 +1,44 @@
+Thank you for installing {{ .Chart.Name }}.
+
+Release: {{ .Release.Name }}
+Namespace: {{ .Release.Namespace }}
+Chart Version: {{ .Chart.Version }}
+App Version: {{ .Chart.AppVersion }}
+
+{{- if eq .Values.deploymentType "daemonset" }}
+Workload: DaemonSet (one probe per node)
+
+kubectl get daemonset {{ include "globalping-probe.fullname" . }} -n {{ .Release.Namespace }}
+{{- else }}
+Workload: Deployment ({{ .Values.replicaCount }} replica{{- if ne (int .Values.replicaCount) 1 }}s{{- end }})
+
+kubectl get deployment {{ include "globalping-probe.fullname" . }} -n {{ .Release.Namespace }}
+{{- end }}
+kubectl get pods -l app.kubernetes.io/name={{ include "globalping-probe.name" . }} -n {{ .Release.Namespace }}
+kubectl logs -l app.kubernetes.io/name={{ include "globalping-probe.name" . }} -n {{ .Release.Namespace }} --tail=100
+
+{{- if .Values.network.hostNetwork }}
+Note: hostNetwork is enabled so the probe can run ICMP tools (ping, traceroute, MTR).
+{{- end }}
+
+{{- if .Values.globalpingToken }}
+Globalping token detected. The probe will adopt into your account.
+{{- else }}
+No Globalping token configured.
+Set one with:
+  helm upgrade {{ .Release.Name }} globalping/globalping \
+    --set globalpingToken=YOUR_TOKEN \
+    --namespace {{ .Release.Namespace }}
+{{- end }}
+
+{{- if .Values.persistence.enabled }}
+Persistent volume is enabled; probe identity survives restarts.
+{{- else }}
+Persistent volume is disabled; a new probe identity will be generated after restarts.
+{{- end }}
+
+More help:
+  https://github.com/jsdelivr/globalping-probe/wiki
+  https://www.jsdelivr.com/globalping
+  https://github.com/jsdelivr/globalping-probe/issues
+

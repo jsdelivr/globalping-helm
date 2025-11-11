@@ -1,0 +1,33 @@
+# CI test values for DaemonSet mode
+globalpingToken: "test-token-ci-daemonset"
+deploymentType: daemonset
+
+# Test with lower resources for CI
+resources:
+  limits:
+    cpu: 200m
+    memory: 256Mi
+  requests:
+    cpu: 50m
+    memory: 128Mi
+
+# Enable all features for comprehensive testing
+network:
+  hostNetwork: true
+  dnsPolicy: ClusterFirstWithHostNet
+
+env:
+  debug: true
+  logFormat: "json"
+
+# Faster probes for CI
+livenessProbe:
+  enabled: true
+  initialDelaySeconds: 30
+  periodSeconds: 10
+
+readinessProbe:
+  enabled: true
+  initialDelaySeconds: 15
+  periodSeconds: 5
+

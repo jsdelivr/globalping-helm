@@ -1,0 +1,25 @@
+{{- if eq .Values.deploymentType "daemonset" }}
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: {{ include "globalping-probe.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "globalping-probe.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "globalping-probe.selectorLabels" . | nindent 6 }}
+  updateStrategy:
+    type: {{ .Values.updateStrategy.type }}
+    {{- if eq .Values.updateStrategy.type "RollingUpdate" }}
+    rollingUpdate:
+      maxUnavailable: {{ .Values.updateStrategy.rollingUpdate.maxUnavailable }}
+    {{- end }}
+  template:
+    metadata:
+      {{- include "globalping-probe.podMetadata" (dict "ctx" .) | nindent 6 }}
+    spec:
+      {{- include "globalping-probe.podSpec" . | nindent 6 }}
+{{- end }}
+

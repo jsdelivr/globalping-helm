@@ -1,0 +1,28 @@
+# Configuration for chart-releaser
+# https://github.com/helm/chart-releaser
+
+# Owner and repository name
+owner: jsdelivr
+repo: globalping-helm
+
+# Generate release notes
+release-notes-file: ""
+
+# GitHub Pages branch
+pages-branch: gh-pages
+
+# Charts directory
+charts-dir: charts
+
+# Skip existing releases
+skip-existing: true
+
+# Package path
+packages-dir: .cr-release-packages
+
+# Index path  
+index-path: .cr-index
+
+# Commit message for index update
+commit: "Update Helm repository index [skip ci]"
+

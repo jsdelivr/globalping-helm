@@ -1,0 +1,78 @@
+name: Bootstrap Pages
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+
+jobs:
+  bootstrap:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Ensure gh-pages branch
+        run: |
+          if git ls-remote --exit-code --heads origin gh-pages > /dev/null 2>&1; then
+            echo "gh-pages already exists; skipping initialization."
+          else
+            git checkout --orphan gh-pages
+            git rm -rf . >/dev/null 2>&1 || true
+
+            # Create index.yaml
+            printf 'apiVersion: v1\nentries: {}\ngenerated: "%s"\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" > index.yaml
+
+            # Create README.md
+            printf '# Globalping Helm Repository\n\nThis branch is managed by GitHub Actions. Packages will be published automatically.\n' > README.md
+
+            # Create index.html with redirect
+            cat > index.html << 'EOF'
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <meta http-equiv="refresh" content="0; url=https://github.com/jsdelivr/globalping-helm">
+              <title>Redirecting to Globalping Helm Repository</title>             
+          </head>
+          <body>
+              <div class="container">
+                  <h1>Globalping Helm Repository</h1>
+                  <p>Redirecting to <a href="https://github.com/jsdelivr/globalping-helm">github.com/jsdelivr/globalping-helm</a>...</p>
+                  <p><small>This is a Helm chart repository. If you're not redirected, <a href="https://github.com/jsdelivr/globalping-helm">click here</a>.</small></p>
+              </div>
+              <script>
+                  window.location.href = "https://github.com/jsdelivr/globalping-helm";
+              </script>
+          </body>
+          </html>
+          EOF
+
+            git add index.yaml README.md index.html
+            git commit -m "Initialize Helm repository index"
+            git push --force origin gh-pages
+            git checkout -
+          fi
+
+      - name: Configure GitHub Pages
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh api --method PUT repos/${{ github.repository }}/pages \
+            -f source[branch]=gh-pages \
+            -f source[path]=/
+
+      - name: Summary
+        run: |
+          echo "GitHub Pages is configured to serve charts from gh-pages."
+

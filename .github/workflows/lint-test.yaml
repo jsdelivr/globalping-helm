@@ -1,0 +1,121 @@
+name: Lint and Test Charts
+
+on:
+  pull_request:
+    paths:
+      - 'charts/**'
+      - '.github/workflows/lint-test.yaml'
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      - 'charts/**'
+      - '.github/workflows/lint-test.yaml'
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v4
+        with:
+          version: v3.14.0
+
+      - name: Set up chart-testing
+        uses: helm/chart-testing-action@v2.7.0
+
+      - name: Run chart-testing (list-changed)
+        id: list-changed
+        run: |
+          changed=$(ct list-changed --target-branch ${{ github.event.repository.default_branch }})
+          if [[ -n "$changed" ]]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Run chart-testing (lint)
+        if: steps.list-changed.outputs.changed == 'true'
+        run: ct lint --target-branch ${{ github.event.repository.default_branch }}
+
+      - name: Helm lint all charts
+        run: |
+          for chart in charts/*/; do
+            echo "Linting $chart"
+            helm lint "$chart"
+          done
+
+      - name: Validate chart values with CI configs
+        run: |
+          for chart in charts/*/; do
+            chart_name=$(basename "$chart")
+            echo "Validating $chart_name with CI values"
+
+            if [ -d "$chart/ci" ]; then
+              for values_file in "$chart/ci"/*.yaml; do
+                if [ -f "$values_file" ]; then
+                  echo "  Testing with $(basename "$values_file")"
+                  helm lint "$chart" --values "$values_file"
+                fi
+              done
+            fi
+          done
+
+  test:
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v4
+        with:
+          version: v3.14.0
+
+      - name: Create kind cluster
+        uses: helm/kind-action@v1.10.0
+
+      - name: Set up chart-testing
+        uses: helm/chart-testing-action@v2.7.0
+
+      - name: Run chart-testing (list-changed)
+        id: list-changed
+        run: |
+          changed=$(ct list-changed --target-branch ${{ github.event.repository.default_branch }})
+          if [[ -n "$changed" ]]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Run chart-testing (install)
+        if: steps.list-changed.outputs.changed == 'true'
+        run: ct install --target-branch ${{ github.event.repository.default_branch }}
+
+      - name: Test template rendering
+        run: |
+          for chart in charts/*/; do
+            chart_name=$(basename "$chart")
+            echo "Testing template rendering for $chart_name"
+
+            # Test default values
+            helm template test "$chart" > /dev/null
+
+            # Test with CI values if they exist
+            if [ -d "$chart/ci" ]; then
+              for values_file in "$chart/ci"/*.yaml; do
+                if [ -f "$values_file" ]; then
+                  echo "  Rendering with $(basename "$values_file")"
+                  helm template test "$chart" --values "$values_file" > /dev/null
+                fi
+              done
+            fi
+          done
