@@ -1,0 +1,198 @@
+# Default values for globalping-probe.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# -- Globalping adoption token for auto-adopting the probe
+# Obtain your token from: https://globalping.io
+# @default -- ""
+globalpingToken: ""
+
+# -- Name override for chart resources
+nameOverride: ""
+# -- Full name override for chart resources
+fullnameOverride: ""
+
+image:
+  # -- Container image repository
+  repository: globalping/globalping-probe
+  # -- Container image pull policy
+  pullPolicy: Always
+  # -- Container image tag (defaults to latest)
+  # @default -- `latest`
+  tag: ""
+
+# -- Image pull secrets for private registries
+imagePullSecrets: []
+
+# -- Deployment type: daemonset or deployment
+# DaemonSet is recommended for geographic diversity (one probe per node)
+deploymentType: daemonset
+
+# -- Number of replicas (only applies when deploymentType is "deployment")
+replicaCount: 1
+
+serviceAccount:
+  # -- Specifies whether a service account should be created
+  create: true
+  # -- Automatically mount a ServiceAccount's API credentials
+  automount: true
+  # -- Annotations to add to the service account
+  annotations: {}
+  # -- The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+# -- Pod annotations
+podAnnotations:
+  prometheus.io/scrape: "false"
+
+# -- Pod labels
+podLabels: {}
+
+podSecurityContext:
+  # -- fsGroup for pod volumes
+  # Note: Not used when hostNetwork is true
+  fsGroup: 1000
+
+securityContext:
+  capabilities:
+    # -- Add NET_RAW capability for ICMP measurements (ping, traceroute)
+    add:
+      - NET_RAW
+  # -- Note: Running as non-root is complex with ICMP tools
+  # Set to true only if your cluster supports unprivileged ICMP
+  runAsNonRoot: false
+  # -- User ID to run the container
+  runAsUser: 0
+  # -- Allow read-write filesystem for probe operations
+  readOnlyRootFilesystem: false
+
+# -- Resource limits and requests
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+# -- Node selector for pod assignment
+nodeSelector: {}
+
+# -- Tolerations for pod assignment
+tolerations: []
+
+# -- Affinity rules for pod assignment
+affinity: {}
+
+# Network configuration
+network:
+  # -- Use host network namespace (required for ICMP measurements)
+  # When true, the probe uses the node's network stack directly
+  hostNetwork: true
+  # -- DNS policy (use "ClusterFirstWithHostNet" when hostNetwork is true)
+  dnsPolicy: ClusterFirstWithHostNet
+
+# Environment variables
+env:
+  # -- Enable debug logging
+  debug: false
+  # -- Log format: json or text
+  logFormat: "text"
+  # -- Additional custom environment variables
+  # @default -- []
+  # Example:
+  # custom:
+  #   - name: MY_VAR
+  #     value: "my-value"
+  custom: []
+
+# Persistence configuration for probe UUID
+persistence:
+  # -- Enable persistent storage for probe UUID
+  # When disabled, a new UUID is generated on each pod restart
+  enabled: false
+  # -- Storage class name
+  storageClassName: ""
+  # -- Access mode for persistent volume
+  accessMode: ReadWriteOnce
+  # -- Size of persistent volume
+  size: 1Gi
+  # -- Annotations for persistent volume claim
+  annotations: {}
+
+# Monitoring and observability
+monitoring:
+  # -- Enable monitoring features
+  enabled: false
+  serviceMonitor:
+    # -- Create a Prometheus ServiceMonitor
+    enabled: false
+    # -- Namespace where ServiceMonitor is created
+    namespace: ""
+    # -- ServiceMonitor labels
+    labels: {}
+    # -- Scrape interval
+    interval: 30s
+    # -- Scrape timeout
+    scrapeTimeout: 10s
+
+# Network policy configuration
+networkPolicy:
+  # -- Enable network policy
+  enabled: false
+  # -- Egress rules for network policy
+  egress:
+    # -- Allow egress to Globalping API
+    - to:
+        - namespaceSelector: {}
+      ports:
+        - protocol: TCP
+          port: 443
+    # -- Allow DNS queries
+    - to:
+        - namespaceSelector: {}
+      ports:
+        - protocol: UDP
+          port: 53
+
+# Liveness probe configuration
+livenessProbe:
+  # -- Enable liveness probe
+  enabled: true
+  # -- Initial delay before liveness probe starts
+  initialDelaySeconds: 60
+  # -- Period between liveness checks
+  periodSeconds: 30
+  # -- Timeout for liveness probe
+  timeoutSeconds: 10
+  # -- Success threshold
+  successThreshold: 1
+  # -- Failure threshold
+  failureThreshold: 3
+
+# Readiness probe configuration
+readinessProbe:
+  # -- Enable readiness probe
+  enabled: true
+  # -- Initial delay before readiness probe starts
+  initialDelaySeconds: 30
+  # -- Period between readiness checks
+  periodSeconds: 10
+  # -- Timeout for readiness probe
+  timeoutSeconds: 5
+  # -- Success threshold
+  successThreshold: 1
+  # -- Failure threshold
+  failureThreshold: 3
+
+# Update strategy
+updateStrategy:
+  # -- Update strategy type (RollingUpdate or OnDelete for DaemonSet)
+  type: RollingUpdate
+  rollingUpdate:
+    # -- Maximum number of unavailable pods during update (DaemonSet)
+    maxUnavailable: 1
+    # -- Maximum number of surge pods (Deployment only)
+    maxSurge: 1
+

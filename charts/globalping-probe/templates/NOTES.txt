@@ -1,0 +1,75 @@
+Thank you for installing {{ .Chart.Name }}!
+
+Your Globalping Probe has been deployed to your Kubernetes cluster.
+
+Chart Version: {{ .Chart.Version }}
+App Version: {{ .Chart.AppVersion }}
+Release Name: {{ .Release.Name }}
+Namespace: {{ .Release.Namespace }}
+
+{{- if eq .Values.deploymentType "daemonset" }}
+
+Deployment Type: DaemonSet (one probe per node)
+
+To check the status of your probes:
+  kubectl get daemonset {{ include "globalping-probe.fullname" . }} -n {{ .Release.Namespace }}
+  kubectl get pods -l app.kubernetes.io/name={{ include "globalping-probe.name" . }} -n {{ .Release.Namespace }}
+
+{{- else }}
+
+Deployment Type: Deployment ({{ .Values.replicaCount }} replica(s))
+
+To check the status of your probes:
+  kubectl get deployment {{ include "globalping-probe.fullname" . }} -n {{ .Release.Namespace }}
+  kubectl get pods -l app.kubernetes.io/name={{ include "globalping-probe.name" . }} -n {{ .Release.Namespace }}
+
+{{- end }}
+
+To view logs from your probe(s):
+  kubectl logs -l app.kubernetes.io/name={{ include "globalping-probe.name" . }} -n {{ .Release.Namespace }} --tail=100 -f
+
+{{- if .Values.network.hostNetwork }}
+
+⚠️  IMPORTANT: Your probes are using hostNetwork mode for ICMP measurements.
+This means they share the node's network namespace, which is required for
+ping, traceroute, and other ICMP-based commands to work properly.
+
+{{- end }}
+
+{{- if .Values.globalpingToken }}
+
+✅ Globalping Token: Configured
+Your probe(s) will automatically adopt to your Globalping account.
+
+{{- else }}
+
+⚠️  WARNING: No Globalping token provided!
+Your probe(s) will run but won't be adopted to your account.
+To add a token, upgrade the release:
+
+  helm upgrade {{ .Release.Name }} globalping-probe/globalping-probe \
+    --set globalpingToken=YOUR_TOKEN_HERE \
+    --namespace {{ .Release.Namespace }}
+
+{{- end }}
+
+{{- if .Values.persistence.enabled }}
+
+💾 Persistent Storage: Enabled
+Your probe UUID will persist across pod restarts.
+
+{{- else }}
+
+⚠️  Persistent Storage: Disabled
+A new probe UUID will be generated each time a pod restarts.
+Consider enabling persistence for production deployments.
+
+{{- end }}
+
+For more information:
+  📖 Documentation: https://github.com/jsdelivr/globalping-probe/wiki
+  🌐 Globalping Platform: https://www.jsdelivr.com/globalping
+  🐛 Report Issues: https://github.com/jsdelivr/globalping-probe/issues
+
+Happy probing! 🌍
+

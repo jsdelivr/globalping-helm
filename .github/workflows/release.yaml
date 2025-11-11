@@ -1,0 +1,118 @@
+name: Release Charts
+
+on:
+  push:
+    branches:
+      - master
+      - main
+    paths:
+      - 'charts/**'
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  release:
+    name: Release Helm Charts
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v4
+        with:
+          version: v3.14.0
+
+      - name: Add Helm repos (for dependencies if any)
+        run: |
+          helm repo add stable https://charts.helm.sh/stable
+          helm repo update
+
+      - name: Run chart-releaser
+        uses: helm/chart-releaser-action@v1.6.0
+        env:
+          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+          CR_SKIP_EXISTING: "true"
+        with:
+          charts_dir: charts
+          config: .github/cr.yaml
+
+      - name: Generate Artifact Hub metadata
+        run: |
+          cat > index.yaml.metadata << EOF
+          # Metadata for Artifact Hub
+          # This file is generated automatically
+          repositoryID: $(uuidgen)
+          owners:
+            - name: Globalping Team
+              email: team@globalping.io
+          EOF
+
+  publish-docs:
+    name: Publish Documentation
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+
+      - name: Verify index.yaml
+        run: |
+          if [ -f index.yaml ]; then
+            echo "✅ Helm repository index found"
+            cat index.yaml
+          else
+            echo "❌ No index.yaml found"
+            exit 1
+          fi
+
+      - name: Trigger Artifact Hub scan
+        run: |
+          echo "Chart released! Artifact Hub will automatically scan the repository."
+          echo "Repository URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}"
+
+  create-release-notes:
+    name: Create Release Notes
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get latest tag
+        id: latest_tag
+        run: |
+          TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+
+      - name: Generate release notes
+        run: |
+          echo "## What's Changed" > release_notes.md
+          echo "" >> release_notes.md
+          git log ${{ steps.latest_tag.outputs.tag }}..HEAD --oneline --pretty=format:"- %s (%h)" >> release_notes.md
+          echo "" >> release_notes.md
+          echo "" >> release_notes.md
+          echo "## Installation" >> release_notes.md
+          echo "" >> release_notes.md
+          echo '```bash' >> release_notes.md
+          echo "helm repo add globalping-probe https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}" >> release_notes.md
+          echo "helm repo update" >> release_notes.md
+          echo "helm install my-probe globalping-probe/globalping-probe --set globalpingToken=YOUR_TOKEN" >> release_notes.md
+          echo '```' >> release_notes.md
+          
+          cat release_notes.md
+

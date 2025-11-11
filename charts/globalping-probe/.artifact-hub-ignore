@@ -1,0 +1,7 @@
+# Files and directories to ignore when scanning for Artifact Hub
+ci/
+tests/
+*.md
+!README.md
+.helmignore
+

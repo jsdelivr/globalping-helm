@@ -1,0 +1,52 @@
+apiVersion: v2
+name: globalping-probe
+description: A Helm chart for deploying Globalping Probe on Kubernetes
+type: application
+version: 1.0.0
+appVersion: "latest"
+keywords:
+  - globalping
+  - probe
+  - network-monitoring
+  - measurements
+  - cdn
+  - jsdelivr
+home: https://github.com/jsdelivr/globalping-probe
+sources:
+  - https://github.com/jsdelivr/globalping-probe
+maintainers:
+  - name: Globalping Team
+    email: team@globalping.io
+    url: https://github.com/jsdelivr
+icon: https://raw.githubusercontent.com/jsdelivr/globalping/master/logo.svg
+annotations:
+  artifacthub.io/category: monitoring-logging
+  artifacthub.io/license: MPL-2.0
+  artifacthub.io/signKey: |
+    fingerprint: <to-be-added>
+    url: https://keybase.io/globalping/pgp_keys.asc
+  artifacthub.io/prerelease: "false"
+  artifacthub.io/operator: "false"
+  artifacthub.io/operatorCapabilities: N/A
+  artifacthub.io/containsSecurityUpdates: "false"
+  artifacthub.io/changes: |
+    - kind: added
+      description: Initial release of Globalping Probe Helm chart
+    - kind: added
+      description: Support for DaemonSet deployment with hostNetwork
+    - kind: added
+      description: Automatic probe adoption via Globalping token
+    - kind: added
+      description: Security contexts with NET_RAW capability
+    - kind: added
+      description: Optional monitoring and observability features
+  artifacthub.io/recommendations: |
+    - url: https://github.com/jsdelivr/globalping
+  artifacthub.io/links: |
+    - name: Documentation
+      url: https://github.com/jsdelivr/globalping-probe/wiki
+    - name: Source Code
+      url: https://github.com/jsdelivr/globalping-probe
+    - name: Globalping Platform
+      url: https://www.jsdelivr.com/globalping
+

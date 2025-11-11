@@ -1,0 +1,109 @@
+name: Setup GitHub Pages
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+      - main
+    paths:
+      - '.github/workflows/pages.yaml'
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  setup-pages:
+    name: Setup GitHub Pages
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          fetch-depth: 0
+
+      - name: Create gh-pages branch if needed
+        run: |
+          git checkout gh-pages || git checkout --orphan gh-pages
+          
+          # Create initial index if it doesn't exist
+          if [ ! -f index.yaml ]; then
+            cat > index.yaml << EOF
+          apiVersion: v1
+          entries: {}
+          generated: "$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+          EOF
+            
+            git add index.yaml
+            git commit -m "Initialize Helm repository index" || true
+          fi
+
+      - name: Create README for GitHub Pages
+        run: |
+          cat > README.md << 'EOF'
+          # Globalping Probe Helm Repository
+          
+          This is the Helm chart repository for Globalping Probe.
+          
+          ## Usage
+          
+          Add this repository to Helm:
+          
+          ```bash
+          helm repo add globalping-probe https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}
+          helm repo update
+          ```
+          
+          ## Install Chart
+          
+          ```bash
+          helm install my-probe globalping-probe/globalping-probe \
+            --set globalpingToken=YOUR_TOKEN_HERE \
+            --namespace globalping-probe \
+            --create-namespace
+          ```
+          
+          ## Available Charts
+          
+          - **globalping-probe**: Deploy Globalping Probe on Kubernetes
+          
+          ## Documentation
+          
+          For detailed documentation, visit the [main repository](https://github.com/${{ github.repository }}).
+          
+          ## Artifact Hub
+          
+          This repository is available on [Artifact Hub](https://artifacthub.io/).
+          EOF
+          
+          git add README.md
+          git diff --staged --quiet || git commit -m "Update repository README [skip ci]"
+
+      - name: Push changes
+        run: |
+          git push origin gh-pages || echo "No changes to push"
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: Output repository URL
+        run: |
+          echo "🎉 Helm repository is available at:"
+          echo "https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}"
+

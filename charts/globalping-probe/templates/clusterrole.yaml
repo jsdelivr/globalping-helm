@@ -1,0 +1,14 @@
+{{- if .Values.serviceAccount.create }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ include "globalping-probe.fullname" . }}
+  labels:
+    {{- include "globalping-probe.labels" . | nindent 4 }}
+rules:
+# Minimal permissions - probe doesn't need access to Kubernetes API
+# This empty rules list creates a ClusterRole that grants no permissions
+# It's here for completeness and future extensibility
+[]
+{{- end }}
+
