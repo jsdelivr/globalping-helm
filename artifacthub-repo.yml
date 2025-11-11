@@ -15,7 +15,7 @@ description: |
   Official Helm charts for deploying Globalping Probe on Kubernetes.
   
   Globalping is a platform that allows you to run network measurements
-  (ping, traceroce, DNS lookups, HTTP requests, MTR) from probes
+  (ping, traceroute, DNS lookups, HTTP requests, MTR) from probes
   distributed around the world. Use these charts to contribute your
   own probe to the global network.
 
@@ -24,10 +24,6 @@ url: https://github.com/jsdelivr/globalping-helm
 
 # Branch where the Helm charts are published (GitHub Pages)
 branch: gh-pages
-
-# Ignore specific patterns when scanning
-ignore:
-  - charts/*/ci/**
 
 # Set to true to disable automatic repository scanning
 disabled: false
