@@ -19,7 +19,7 @@ description: |
   - Lean defaults plus optional NetworkPolicy support
 
 # Logo image URL
-logoURL: https://raw.githubusercontent.com/jsdelivr/globalping/master/logo.svg
+logoURL: https://cdn.jsdelivr.net/gh/jsdelivr/globalping-media@master/logo/full_colored_dark.svg
 
 # Package home URL
 homeURL: https://globalping.io
@@ -36,12 +36,12 @@ keywords:
   - http
   - mtr
   - cdn
-  - jsdelivr
+  - latency
 
 # Maintainers
 maintainers:
-  - name: Globalping Team
-    email: team@globalping.io
+  - name: Globalping
+    email: d@globalping.io
     url: https://github.com/jsdelivr
 
 # Provider name
@@ -51,15 +51,13 @@ provider:
 # Links
 links:
   - name: Documentation
-    url: https://github.com/jsdelivr/globalping-probe/wiki
+    url: https://github.com/jsdelivr/globalping
   - name: Source Code
     url: https://github.com/jsdelivr/globalping-probe
   - name: Platform
-    url: https://www.jsdelivr.com/globalping
+    url: https://globalping.io/
   - name: Issue Tracker
     url: https://github.com/jsdelivr/globalping-probe/issues
-  - name: Community
-    url: https://discord.gg/globalping
 
 # Changelog/Recommendations/Changes are defined in Chart.yaml annotations
 # and will be automatically synced
