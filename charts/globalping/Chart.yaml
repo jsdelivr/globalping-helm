@@ -15,16 +15,16 @@ keywords:
   - http
   - mtr
   - cdn
-  - jsdelivr
+  - latency
 home: https://globalping.io
 sources:
   - https://github.com/jsdelivr/globalping-probe
   - https://github.com/jsdelivr/globalping-helm
 maintainers:
-  - name: Globalping Team
-    email: team@globalping.io
+  - name: Globalping
+    email: d@globalping.io
     url: https://github.com/jsdelivr
-icon: https://raw.githubusercontent.com/jsdelivr/globalping/master/logo.svg
+icon: https://cdn.jsdelivr.net/gh/jsdelivr/globalping-media@master/logo/full_colored_dark.svg
 annotations:
   artifacthub.io/category: monitoring-logging
   artifacthub.io/license: MPL-2.0
@@ -45,15 +45,13 @@ annotations:
       description: Added ICMP egress rule to NetworkPolicy for ping/traceroute support
   artifacthub.io/links: |
     - name: Documentation
-      url: https://github.com/jsdelivr/globalping-probe/wiki
+      url: https://github.com/jsdelivr/globalping
     - name: Source Code
       url: https://github.com/jsdelivr/globalping-probe
-    - name: Helm Repository
-      url: https://github.com/jsdelivr/globalping-helm
-    - name: Globalping Platform
-      url: https://globalping.io
-    - name: Community Discord
-      url: https://discord.gg/globalping
+    - name: Platform
+      url: https://globalping.io/
+    - name: Issue Tracker
+      url: https://github.com/jsdelivr/globalping-probe/issues
   artifacthub.io/recommendations: |
     - url: https://artifacthub.io/packages/helm/prometheus-community/kube-prometheus-stack
   # Operator flags

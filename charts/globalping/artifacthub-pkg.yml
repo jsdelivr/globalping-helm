@@ -1,102 +1,34 @@
 # Artifact Hub package metadata
 # https://artifacthub.io/docs/topics/annotations/helm/
+#
+# This file contains ONLY unique metadata not available in Chart.yaml.
+# Chart.yaml is the single source of truth for logo, maintainers, keywords, links, etc.
 
-# Version string (will be synced from Chart.yaml)
+# Version (synced automatically by release workflow)
 version: 1.0.4
 
-# Display name for the package
-displayName: Globalping Probe
-
-# Package description
-description: |
-  Deploy Globalping Probe on Kubernetes to contribute to the global network measurement platform.
-  
-  This Helm chart provides a production-ready deployment with:
-  - Secure secret management for adoption tokens
-  - Support for DaemonSet or Deployment modes  
-  - Host network mode for ICMP measurements
-  - Optional persistence for probe UUID
-  - Lean defaults plus optional NetworkPolicy support
-
-# Logo image URL
-logoURL: https://cdn.jsdelivr.net/gh/jsdelivr/globalping-media@master/logo/full_colored_dark.svg
-
-# Package home URL
-homeURL: https://globalping.io
-
-# Application keywords
-keywords:
-  - globalping
-  - network-monitoring
-  - probe
-  - measurements
-  - ping
-  - traceroute
-  - dns
-  - http
-  - mtr
-  - cdn
-  - latency
-
-# Maintainers
-maintainers:
-  - name: Globalping
-    email: d@globalping.io
-    url: https://github.com/jsdelivr
-
-# Provider name
+# Provider information
 provider:
   name: jsDelivr
 
-# Links
-links:
-  - name: Documentation
-    url: https://github.com/jsdelivr/globalping
-  - name: Source Code
-    url: https://github.com/jsdelivr/globalping-probe
-  - name: Platform
-    url: https://globalping.io/
-  - name: Issue Tracker
-    url: https://github.com/jsdelivr/globalping-probe/issues
-
-# Changelog/Recommendations/Changes are defined in Chart.yaml annotations
-# and will be automatically synced
-
-# Security report
-securityUpdates: false
-
-# Prerelease flag
-prerelease: false
-
-# Deprecated flag
-deprecated: false
-
-# License
-license: MPL-2.0
-
-# Container images used by this chart
-containsSecurityUpdates: false
+# Container images used by this chart (for security scanning)
 containersImages:
   - name: globalping-probe
     image: globalping/globalping-probe:1.0.4
     whitelisted: false
 
-# Operator information
-operator: false
-operatorCapabilities: N/A
-
-# Installation instructions
+# Installation instructions (displayed on Artifact Hub)
 install: |
   ## Prerequisites
-  
+
   - Kubernetes 1.19+
   - Helm 3.2.0+
   - A Globalping adoption token from https://globalping.io
-  
+
   ## Quick Start
-  
+
   1. Add the Helm repository:
-  
+
   ```bash
   helm repo add globalping https://jsdelivr.github.io/globalping-helm
   helm repo update
@@ -110,22 +42,12 @@ install: |
     --namespace globalping \
     --create-namespace
   ```
-  
+
   3. Verify the installation:
 
   ```bash
   kubectl get daemonset -n globalping
   kubectl logs -l app.kubernetes.io/instance=globalping-probe -n globalping
   ```
-  
+
   For detailed configuration options, see the chart README.
-
-# Recommendations
-recommendations:
-  - url: https://artifacthub.io/packages/helm/prometheus-community/kube-prometheus-stack
-  - url: https://globalping.io
-
-# Data types (for Artifact Hub categorization)
-data:
-  category: monitoring-logging
-
