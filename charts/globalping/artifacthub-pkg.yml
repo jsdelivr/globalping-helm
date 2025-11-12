@@ -5,7 +5,7 @@
 # Chart.yaml is the single source of truth for logo, maintainers, keywords, links, etc.
 
 # Version (synced automatically by release workflow)
-version: 1.0.6
+version: 1.0.7
 
 # Provider information
 provider:
@@ -14,7 +14,7 @@ provider:
 # Container images used by this chart (for security scanning)
 containersImages:
   - name: globalping-probe
-    image: globalping/globalping-probe:latest
+    image: globalping/globalping-probe:1.0.7
     whitelisted: false
 
 # Installation instructions (displayed on Artifact Hub)
