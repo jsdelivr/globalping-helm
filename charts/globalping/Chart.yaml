@@ -3,7 +3,7 @@ name: globalping
 description: Helm chart for deploying the Globalping probe on Kubernetes
 type: application
 version: 1.0.8
-appVersion: "1.0.7"
+appVersion: "latest"
 keywords:
   - globalping
   - probe
