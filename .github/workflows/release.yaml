@@ -61,11 +61,8 @@ jobs:
 
             echo "New version: $new_version"
 
-            # Update Chart.yaml version
+            # Update Chart.yaml version (but not appVersion - it should stay as "latest")
             sed -i "s/^version: .*/version: $new_version/" "$chart_yaml"
-
-            # Also update appVersion to match
-            sed -i "s/^appVersion: .*/appVersion: \"$new_version\"/" "$chart_yaml"
 
             echo "Updated $chart_yaml to version $new_version"
 
@@ -73,11 +70,8 @@ jobs:
             if [ -f "$artifacthub_pkg" ]; then
               echo "Updating $artifacthub_pkg"
 
-              # Update version field
+              # Update version field (but not container image - it should stay as "latest")
               sed -i "s/^version: .*/version: $new_version/" "$artifacthub_pkg"
-
-              # Update container image version in containersImages section
-              sed -i "s|image: globalping/globalping-probe:.*|image: globalping/globalping-probe:$new_version|" "$artifacthub_pkg"
 
               echo "Updated $artifacthub_pkg to version $new_version"
             fi
