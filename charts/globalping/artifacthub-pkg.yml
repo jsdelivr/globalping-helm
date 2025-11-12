@@ -14,7 +14,7 @@ provider:
 # Container images used by this chart (for security scanning)
 containersImages:
   - name: globalping-probe
-    image: globalping/globalping-probe:1.0.5
+    image: globalping/globalping-probe:latest
     whitelisted: false
 
 # Installation instructions (displayed on Artifact Hub)
