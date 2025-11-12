@@ -35,6 +35,70 @@ entries:
       artifacthub.io/recommendations: |
         - url: https://artifacthub.io/packages/helm/prometheus-community/kube-prometheus-stack
     apiVersion: v2
+    appVersion: 1.0.4
+    created: "2025-11-12T09:40:51.339993682Z"
+    description: Helm chart for deploying the Globalping probe on Kubernetes
+    digest: 56eb199a07d8a299b24fa81d5b281225d496c86d892b9da7e2be34997c674faa
+    home: https://globalping.io
+    icon: https://raw.githubusercontent.com/jsdelivr/globalping/master/logo.svg
+    keywords:
+    - globalping
+    - probe
+    - network-monitoring
+    - measurements
+    - ping
+    - traceroute
+    - dns
+    - http
+    - mtr
+    - cdn
+    - jsdelivr
+    maintainers:
+    - email: team@globalping.io
+      name: Globalping Team
+      url: https://github.com/jsdelivr
+    name: globalping
+    sources:
+    - https://github.com/jsdelivr/globalping-probe
+    - https://github.com/jsdelivr/globalping-helm
+    type: application
+    urls:
+    - https://github.com/jsdelivr/globalping-helm/releases/download/globalping-1.0.4/globalping-1.0.4.tgz
+    version: 1.0.4
+  - annotations:
+      artifacthub.io/category: monitoring-logging
+      artifacthub.io/changes: |
+        - kind: changed
+          description: Simplified workloads while keeping deployment, persistence, and network policy options
+        - kind: changed
+          description: Shared pod spec logic between DaemonSet and Deployment manifests
+        - kind: fixed
+          description: Fixed helm lint issues with .helmignore negation pattern and template includes
+        - kind: fixed
+          description: Fixed NOTES.txt type comparison for replicaCount
+        - kind: added
+          description: Added comprehensive CI/CD workflows for testing and releasing
+        - kind: added
+          description: Added ICMP egress rule to NetworkPolicy for ping/traceroute support
+      artifacthub.io/containsSecurityUpdates: "false"
+      artifacthub.io/kubeVersion: '>=1.19.0-0'
+      artifacthub.io/license: MPL-2.0
+      artifacthub.io/links: |
+        - name: Documentation
+          url: https://github.com/jsdelivr/globalping-probe/wiki
+        - name: Source Code
+          url: https://github.com/jsdelivr/globalping-probe
+        - name: Helm Repository
+          url: https://github.com/jsdelivr/globalping-helm
+        - name: Globalping Platform
+          url: https://globalping.io
+        - name: Community Discord
+          url: https://discord.gg/globalping
+      artifacthub.io/operator: "false"
+      artifacthub.io/prerelease: "false"
+      artifacthub.io/recommendations: |
+        - url: https://artifacthub.io/packages/helm/prometheus-community/kube-prometheus-stack
+    apiVersion: v2
     appVersion: 1.0.2
     created: "2025-11-12T09:07:41.520569054Z"
     description: Helm chart for deploying the Globalping probe on Kubernetes
@@ -129,4 +193,4 @@ entries:
     urls:
     - https://github.com/jsdelivr/globalping-helm/releases/download/globalping-1.0.1/globalping-1.0.1.tgz
     version: 1.0.1
-generated: "2025-11-12T09:07:41.520583902Z"
+generated: "2025-11-12T09:40:51.340014712Z"
