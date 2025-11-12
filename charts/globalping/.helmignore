@@ -26,8 +26,9 @@
 .circleci/
 .travis.yml
 .gitlab-ci.yml
-# Documentation
+# Documentation (but keep README.md)
 *.md
+!README.md
 # Test files
 test/
 tests/
