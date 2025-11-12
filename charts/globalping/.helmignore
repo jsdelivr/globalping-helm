@@ -26,9 +26,8 @@
 .circleci/
 .travis.yml
 .gitlab-ci.yml
-# Documentation (but keep README.md)
-*.md
-!README.md
+# Documentation
+# *.md excluded - but we want README.md in the package for Artifact Hub
 # Test files
 test/
 tests/
