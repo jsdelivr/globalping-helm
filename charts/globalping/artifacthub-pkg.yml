@@ -5,7 +5,7 @@
 # Chart.yaml is the single source of truth for logo, maintainers, keywords, links, etc.
 
 # Version (synced automatically by release workflow)
-version: 1.0.9
+version: 1.0.10
 
 # Provider information
 provider:
