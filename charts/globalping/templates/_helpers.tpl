@@ -145,9 +145,7 @@ containers:
     livenessProbe:
       exec:
         command:
-          - sh
-          - -c
-          - "pgrep -f node || exit 1"
+          {{- toYaml $ctx.Values.livenessProbe.exec.command | nindent 10 }}
       initialDelaySeconds: {{ $ctx.Values.livenessProbe.initialDelaySeconds }}
       periodSeconds: {{ $ctx.Values.livenessProbe.periodSeconds }}
       timeoutSeconds: {{ $ctx.Values.livenessProbe.timeoutSeconds }}
@@ -158,9 +156,7 @@ containers:
     readinessProbe:
       exec:
         command:
-          - sh
-          - -c
-          - "pgrep -f node || exit 1"
+          {{- toYaml $ctx.Values.readinessProbe.exec.command | nindent 10 }}
       initialDelaySeconds: {{ $ctx.Values.readinessProbe.initialDelaySeconds }}
       periodSeconds: {{ $ctx.Values.readinessProbe.periodSeconds }}
       timeoutSeconds: {{ $ctx.Values.readinessProbe.timeoutSeconds }}
@@ -191,4 +187,3 @@ tolerations:
   {{- toYaml . | nindent 2 }}
 {{- end }}
 {{- end }}
-

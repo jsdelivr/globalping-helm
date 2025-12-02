@@ -119,6 +119,8 @@ Here are the main options you can configure. For the full list, check `values.ya
 | `securityContext.runAsNonRoot` | Force a non-root UID | `false` |
 | `securityContext.capabilities.add` | Linux capabilities granted | `["NET_RAW"]` |
 
+**Note on NetworkPolicy:** Kubernetes NetworkPolicy doesn't support ICMP protocol restrictions. When `networkPolicy.enabled` is true, the policy allows TCP/443 (HTTPS) and UDP/53 (DNS) explicitly, plus unrestricted egress to all namespaces for ICMP measurements (ping/traceroute/MTR).
+
 ### Storage
 
 | Setting | Description | Default |
@@ -133,7 +135,11 @@ Here are the main options you can configure. For the full list, check `values.ya
 | Setting | Description | Default |
 |---------|-------------|---------|
 | `livenessProbe.enabled` | Enable liveness probe | `true` |
+| `livenessProbe.exec.command` | Custom command for liveness check | `["sh", "-c", "grep -q node /proc/*/comm 2>/dev/null \|\| exit 1"]` |
 | `readinessProbe.enabled` | Enable readiness probe | `true` |
+| `readinessProbe.exec.command` | Custom command for readiness check | `["sh", "-c", "grep -q node /proc/*/comm 2>/dev/null \|\| exit 1"]` |
+
+The default probe commands use `/proc` filesystem to check for the node process, which works in minimal container images without additional dependencies.
 
 ## Why hostNetwork?
 

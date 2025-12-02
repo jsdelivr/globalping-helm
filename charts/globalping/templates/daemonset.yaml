@@ -22,4 +22,3 @@ spec:
     spec:
       {{- include "globalping-probe.podSpec" . | nindent 6 }}
 {{- end }}
-
