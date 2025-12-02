@@ -92,6 +92,11 @@ livenessProbe:
   timeoutSeconds: 10
   successThreshold: 1
   failureThreshold: 3
+  exec:
+    command:
+      - sh
+      - -c
+      - "grep -q node /proc/*/comm 2>/dev/null || exit 1"
 
 readinessProbe:
   enabled: true
@@ -100,6 +105,11 @@ readinessProbe:
   timeoutSeconds: 5
   successThreshold: 1
   failureThreshold: 3
+  exec:
+    command:
+      - sh
+      - -c
+      - "grep -q node /proc/*/comm 2>/dev/null || exit 1"
 
 updateStrategy:
   type: RollingUpdate

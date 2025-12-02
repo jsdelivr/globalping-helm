@@ -31,18 +31,10 @@ annotations:
   artifacthub.io/prerelease: "false"
   artifacthub.io/containsSecurityUpdates: "false"
   artifacthub.io/changes: |
-    - kind: changed
-      description: Simplified workloads while keeping deployment, persistence, and network policy options
-    - kind: changed
-      description: Shared pod spec logic between DaemonSet and Deployment manifests
     - kind: fixed
-      description: Fixed helm lint issues with .helmignore negation pattern and template includes
-    - kind: fixed
-      description: Fixed NOTES.txt type comparison for replicaCount
+      description: Fixed probe health checks to work with minimal container images by replacing pgrep with /proc filesystem checks
     - kind: added
-      description: Added comprehensive CI/CD workflows for testing and releasing
-    - kind: added
-      description: Added ICMP egress rule to NetworkPolicy for ping/traceroute support
+      description: Made liveness and readiness probe commands configurable via values.yaml
   artifacthub.io/links: |
     - name: Documentation
       url: https://github.com/jsdelivr/globalping
