@@ -41,4 +41,3 @@ More help:
   https://github.com/jsdelivr/globalping-probe/wiki
   https://www.jsdelivr.com/globalping
   https://github.com/jsdelivr/globalping-probe/issues
-

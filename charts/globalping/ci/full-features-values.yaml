@@ -48,4 +48,3 @@ readinessProbe:
   enabled: true
   initialDelaySeconds: 15
   periodSeconds: 5
-

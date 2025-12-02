@@ -50,4 +50,3 @@ annotations:
   artifacthub.io/operator: "false"
   # Kubernetes version requirements
   artifacthub.io/kubeVersion: ">=1.19.0-0"
-
