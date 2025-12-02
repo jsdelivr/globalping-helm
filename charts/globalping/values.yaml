@@ -79,11 +79,10 @@ networkPolicy:
       ports:
         - protocol: UDP
           port: 53
-    # Allow ICMP for ping/traceroute measurements
+    # Allow all protocols (including ICMP) for measurements
+    # Note: NetworkPolicy doesn't support ICMP protocol, so we allow all traffic
     - to:
         - namespaceSelector: {}
-      ports:
-        - protocol: ICMP
 
 livenessProbe:
   enabled: true

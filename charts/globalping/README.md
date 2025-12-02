@@ -119,6 +119,8 @@ Here are the main options you can configure. For the full list, check `values.ya
 | `securityContext.runAsNonRoot` | Force a non-root UID | `false` |
 | `securityContext.capabilities.add` | Linux capabilities granted | `["NET_RAW"]` |
 
+**Note on NetworkPolicy:** Kubernetes NetworkPolicy doesn't support ICMP protocol restrictions. When `networkPolicy.enabled` is true, the policy allows TCP/443 (HTTPS) and UDP/53 (DNS) explicitly, plus unrestricted egress to all namespaces for ICMP measurements (ping/traceroute/MTR).
+
 ### Storage
 
 | Setting | Description | Default |
