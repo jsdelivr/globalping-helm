@@ -185,8 +185,8 @@ jobs:
               <div class="container">
                   <div class="logo">🌍</div>
                   <h1>Globalping Helm Repository</h1>
+                  <p><small>This is a Helm chart repository.</small></p>
                   <p>Redirecting to <a href="https://github.com/jsdelivr/globalping-helm">github.com/jsdelivr/globalping-helm</a>...</p>
-                  <p><small>This is a Helm chart repository. If you're not redirected, <a href="https://github.com/jsdelivr/globalping-helm">click here</a>.</small></p>
               </div>
               <script>
                   window.location.href = "https://github.com/jsdelivr/globalping-helm";
