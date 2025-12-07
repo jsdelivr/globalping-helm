@@ -43,13 +43,13 @@ jobs:
               <meta charset="UTF-8">
               <meta name="viewport" content="width=device-width, initial-scale=1.0">
               <meta http-equiv="refresh" content="0; url=https://github.com/jsdelivr/globalping-helm">
-              <title>Redirecting to Globalping Helm Repository</title>             
+              <title>Redirecting to Globalping Helm Repository</title>
           </head>
           <body>
               <div class="container">
                   <h1>Globalping Helm Repository</h1>
+                  <p><small>This is a Helm chart repository.</small></p>
                   <p>Redirecting to <a href="https://github.com/jsdelivr/globalping-helm">github.com/jsdelivr/globalping-helm</a>...</p>
-                  <p><small>This is a Helm chart repository. If you're not redirected, <a href="https://github.com/jsdelivr/globalping-helm">click here</a>.</small></p>
               </div>
               <script>
                   window.location.href = "https://github.com/jsdelivr/globalping-helm";
