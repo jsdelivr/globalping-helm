@@ -28,6 +28,62 @@ entries:
         - url: https://artifacthub.io/packages/helm/prometheus-community/kube-prometheus-stack
     apiVersion: v2
     appVersion: latest
+    created: "2025-12-07T08:52:59.126399689Z"
+    description: Helm chart for deploying the Globalping probe on Kubernetes
+    digest: 0155d8d761eb0c9955fb1abf42cf53c4eab0829a5b5f3b0d1150fc96e8508fa0
+    home: https://globalping.io
+    icon: https://cdn.jsdelivr.net/gh/jsdelivr/globalping-media@master/logo/full_colored_dark.svg
+    keywords:
+    - globalping
+    - probe
+    - network-monitoring
+    - measurements
+    - ping
+    - traceroute
+    - dns
+    - http
+    - mtr
+    - cdn
+    - latency
+    maintainers:
+    - email: d@globalping.io
+      name: Globalping
+      url: https://github.com/jsdelivr
+    name: globalping
+    sources:
+    - https://github.com/jsdelivr/globalping-probe
+    - https://github.com/jsdelivr/globalping-helm
+    type: application
+    urls:
+    - https://github.com/jsdelivr/globalping-helm/releases/download/globalping-1.0.11/globalping-1.0.11.tgz
+    version: 1.0.11
+  - annotations:
+      artifacthub.io/category: monitoring-logging
+      artifacthub.io/changes: |
+        - kind: fixed
+          description: Fixed probe health checks to work with minimal container images by replacing pgrep with /proc filesystem checks
+        - kind: fixed
+          description: Fixed NetworkPolicy egress rule for ICMP traffic (Kubernetes doesn't support ICMP protocol in NetworkPolicy spec)
+        - kind: added
+          description: Made liveness and readiness probe commands configurable via values.yaml
+      artifacthub.io/containsSecurityUpdates: "false"
+      artifacthub.io/kubeVersion: '>=1.19.0-0'
+      artifacthub.io/license: MPL-2.0
+      artifacthub.io/links: |
+        - name: Documentation
+          url: https://github.com/jsdelivr/globalping
+        - name: Source Code
+          url: https://github.com/jsdelivr/globalping-probe
+        - name: Platform
+          url: https://globalping.io/
+        - name: Issue Tracker
+          url: https://github.com/jsdelivr/globalping-probe/issues
+      artifacthub.io/operator: "false"
+      artifacthub.io/prerelease: "false"
+      artifacthub.io/recommendations: |
+        - url: https://artifacthub.io/packages/helm/prometheus-community/kube-prometheus-stack
+    apiVersion: v2
+    appVersion: latest
     created: "2025-12-02T12:51:52.028732566Z"
     description: Helm chart for deploying the Globalping probe on Kubernetes
     digest: 304a1296faf6b8f4329f562ee5cc9063a6369cf2bb1656c56e2f94382d613c27
@@ -559,4 +615,4 @@ entries:
     urls:
     - https://github.com/jsdelivr/globalping-helm/releases/download/globalping-1.0.1/globalping-1.0.1.tgz
     version: 1.0.1
-generated: "2025-12-02T12:51:52.028772301Z"
+generated: "2025-12-07T08:52:59.126466954Z"
